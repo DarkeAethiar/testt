@@ -6,9 +6,9 @@
 #include "drive.hpp"
 //#include "Auton"
 
-TankDrive tankDrive(std::make_shared<okapi::Motor(11, false, okapi::AbstractMotor::gearset::red, okapi::AbstractMotor::encoderUnits::degrees)>,
-                    std::make_shared<okapi::Motor(20, false, okapi::AbstractMotor::gearset::red, okapi::AbstractMotor::encoderUnits::degrees)>,
-                    std::make_shared<okapi::Controller(okapi::ControllerId::master)>);
+TankDrive tankDrive(std::make_shared<okapi::Motor>(okapi::Motor(11, false, okapi::AbstractMotor::gearset::red, okapi::AbstractMotor::encoderUnits::degrees)),
+                    std::make_shared<okapi::Motor>(okapi::Motor(20, false, okapi::AbstractMotor::gearset::red, okapi::AbstractMotor::encoderUnits::degrees)),
+                    std::make_shared<okapi::Controller>(okapi::Controller(okapi::ControllerId::master)));
 
 okapi::Controller con(okapi::ControllerId::master);
 
