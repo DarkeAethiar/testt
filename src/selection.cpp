@@ -4,6 +4,12 @@
 // #include "routines.hpp"
 #include <algorithm>
 #include <string>
+#include <iostream>
+#include "main.hpp"
+
+
+//void AutonWinPointRight();
+
 namespace auton {
   namespace selection {
     /*forward defs*/
@@ -43,31 +49,44 @@ namespace auton {
     lv_style_t style_config;
     // lv_style_t style_btn;
 
-    Positons positon = Positons::FR;//br skills; fr match;
+    Positons positon = Positons::NONE;//br skills; fr match;
     Shoots shoot = Shoots::MID;
     Flags flag = Flags::TOP;
     Options option = Options::PARK;
 
     std::string screenText[4][3] = {
-        {"Front Red", "Mid", "Far"},
-        {"Back Red", "Top", ""},
-        {"BacK Blue", "Mid", ""},
-        {"Front Blue", "Park", ""},
+        {"Right1/2WP", "FullWP", "Empty"},
+        {"Right2G", "RightMid1/2WP", "Empty"},
+        {"Left1/2WP", "Empty", "Empty"},
+        {"Left2G", "Empty", "Empty"},
     };
+    // AutonRight();
+  // AutonLeft();
+  // Autonsuperultimatewinpointthatmadeethanwanttohanghimself();
+  // AutonWinPointRight();
+  // AutonWinPointLeft();
+  // AutonSkills();
+  //  AutonFullWinpoint();
+  
     void execute() {
       switch (positon) {
-      case Positons::FR:
-        // auton::routines::red::front::all(shoot, flag, option);
+      case Positons::r1:
+        AutonWinPointRight();
         break;
-      case Positons::BR:
-        // auton::routines::red::back::skills(); 
-        // auton::routines::red::back::all(shoot, flag, option);
+      case Positons::r2:
+        AutonRight();
         break;
-      case Positons::BB:
-        // auton::routines::blue::back::all(shoot, flag, option);
+      case Positons::l1:
+        AutonWinPointLeft();
         break;
-      case Positons::FB:
-        // auton::routines::blue::front::all(shoot, flag, option);
+      case Positons::l2:
+        AutonLeft();
+        break;
+      case Positons::l3:
+      AutonFullWinpoint();
+        break;
+      case Positons::r4:
+      AutonRightMidWinpoint();
         break;
       }
     }
@@ -76,8 +95,8 @@ namespace auton {
 
       BtnInit(Btn0_0, &style_red, 0, 0);
       BtnInit(Btn1_0, &style_red, 1, 0);
-      BtnInit(Btn2_0, &style_blue, 2, 0);
-      BtnInit(Btn3_0, &style_blue, 3, 0);
+      BtnInit(Btn2_0, &style_red, 2, 0);
+      BtnInit(Btn3_0, &style_red, 3, 0);
       lv_btn_set_action(Btn0_0, LV_BTN_ACTION_CLICK, OnClickPos);
       lv_btn_set_action(Btn1_0, LV_BTN_ACTION_CLICK, OnClickPos);
       lv_btn_set_action(Btn2_0, LV_BTN_ACTION_CLICK, OnClickPos);
@@ -85,16 +104,16 @@ namespace auton {
 
       BtnInit(Btn0_1, &style_config, 0, 1);
       BtnInit(Btn0_2, &style_config, 0, 2);
-      lv_btn_set_action(Btn0_1, LV_BTN_ACTION_CLICK, OnClickSho);
-      lv_btn_set_action(Btn0_2, LV_BTN_ACTION_CLICK, OnClickSho);
+      lv_btn_set_action(Btn0_1, LV_BTN_ACTION_CLICK, OnClickPos);
+      lv_btn_set_action(Btn0_2, LV_BTN_ACTION_CLICK, OnClickPos);
 
       BtnInit(Btn1_1, &style_config, 1, 1);
       BtnInit(Btn2_1, &style_config, 2, 1);
-      lv_btn_set_action(Btn1_1, LV_BTN_ACTION_CLICK, OnClickFla);
-      lv_btn_set_action(Btn2_1, LV_BTN_ACTION_CLICK, OnClickFla);
+      lv_btn_set_action(Btn1_1, LV_BTN_ACTION_CLICK, OnClickPos);
+      lv_btn_set_action(Btn2_1, LV_BTN_ACTION_CLICK, OnClickPos);
 
       BtnInit(Btn3_1, &style_config, 3, 1);
-      lv_btn_set_action(Btn3_1, LV_BTN_ACTION_CLICK, OnClickOpt);
+      lv_btn_set_action(Btn3_1, LV_BTN_ACTION_CLICK, OnClickPos);
 
       BtnInit(Btn1_2, &style_config, 1, 2);
       BtnInit(Btn2_2, &style_config, 2, 2);
@@ -221,10 +240,13 @@ namespace auton {
       }
     }
     static lv_res_t OnClickPos(_lv_obj_t *pressedBtn) {
-      testBtnPos(pressedBtn, Btn0_0, Positons::FR);
-      testBtnPos(pressedBtn, Btn1_0, Positons::BR);
-      testBtnPos(pressedBtn, Btn2_0, Positons::BB);
-      testBtnPos(pressedBtn, Btn3_0, Positons::FB);
+      testBtnPos(pressedBtn, Btn0_0, Positons::r1);
+      testBtnPos(pressedBtn, Btn1_0, Positons::r2);
+      //testBtnPos(pressedBtn, Btn1_1, Positons::r3);
+      testBtnPos(pressedBtn, Btn2_0, Positons::l1);
+      testBtnPos(pressedBtn, Btn3_0, Positons::l2);
+      testBtnPos(pressedBtn, Btn0_1, Positons::l3);
+      testBtnPos(pressedBtn, Btn1_1, Positons::r4);
       ControllerScreen();
       std::cout << "pos: " << static_cast<int>(positon) << " sho: " << static_cast<int>(shoot) << " fla: " << static_cast<int>(flag) << " opt: " << static_cast<int>(option) << std::endl;
       return LV_RES_OK;
@@ -252,17 +274,23 @@ namespace auton {
 
     void BtnShow() {
       switch (positon) {
-      case Positons::FR:
+      case Positons::r1:
         lv_btn_set_state(Btn0_0, LV_BTN_STATE_TGL_PR); //fr
         break;
-      case Positons::BR:
+      case Positons::r2:
         lv_btn_set_state(Btn1_0, LV_BTN_STATE_TGL_PR); //br
         break;
-      case Positons::BB:
+      case Positons::l1:
         lv_btn_set_state(Btn2_0, LV_BTN_STATE_TGL_PR); //bb
         break;
-      case Positons::FB:
+      case Positons::l2:
         lv_btn_set_state(Btn3_0, LV_BTN_STATE_TGL_PR); //fb
+        break;
+      case Positons::l3:
+        lv_btn_set_state(Btn1_0, LV_BTN_STATE_TGL_PR);
+        break;
+      case Positons::r4:
+        lv_btn_set_state(Btn1_1, LV_BTN_STATE_TGL_PR);
         break;
       };
       switch (shoot) {
